@@ -3,8 +3,6 @@
 from flask import Flask, url_for, render_template, request, redirect, session
 import sqlite3 as sql
 
-# from flask_sqlalchemy import SQLAlchemy
-# from instagram import getfollowedby, getname
 
 con = sql.connect("data.db", check_same_thread = False)
 cur = con.cursor()
@@ -13,20 +11,6 @@ statement = f"CREATE TABLE IF NOT EXISTS users('username' TEXT, 'password' TEXT)
 cur.execute(statement)
 
 app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-# db = SQLAlchemy(app)
-
-
-# class User(db.Model):
-#     """ Create user table"""
-#     id = db.Column(db.Integer, primary_key=True)
-    # username = db.Column(db.String(80), unique=True)
-    # password = db.Column(db.String(80))
-
-#     def __init__(self, username, password):
-#         self.username = username
-#         self.password = password
-
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -52,33 +36,22 @@ def login():
         print("name : ", name)
         print("password : ", passw)
 
-        statement = f"SELECT username from users WHERE username='{name}' AND Password = '{passw}';"
+        statement = f"SELECT username from users WHERE username='{name}' AND password = '{passw}';"
+        print(statement)
         cur.execute(statement)
+        
 
         if not cur.fetchone():  # An empty result evaluates to False.
+            return "Login Failed.."
+        else:
             session['logged_in'] = True
             return "Login Success"
-        else:
-            return "Login Failed.."
 
-        # try:
-        #     data = User.query.filter_by(username=name, password=passw).first()
-        #     if data is not None:
-        #         session['logged_in'] = True
-        #         return redirect(url_for('home'))
-        #     else:
-        #         return 'Dont Login'
-        # except:
-        #     return "Dont Login"
 
 @app.route('/register/', methods=['GET', 'POST'])
 def register():
     """Register Form"""
     if request.method == 'POST':
-        # new_user = User(username=request.form['username'], password=request.form['password'])
-
-        # db.session.add(new_user)
-        # db.session.commit()
 
         name = request.form['username']
         passw = request.form['password']
@@ -97,7 +70,7 @@ def logout():
 
 
 if __name__ == '__main__':
-    app.debug = True
+    #app.debug = True
     # with app.app_context() :
     #     db.create_all()
     app.secret_key = "123"
