@@ -42,10 +42,12 @@ def login():
         
 
         if not cur.fetchone():  # An empty result evaluates to False.
-            return "Login Failed.."
+            print("Login Failed")
+            return redirect(url_for('home'))
         else:
+            print("Login Success")
             session['logged_in'] = True
-            return "Login Success"
+            return redirect(url_for('home'))
 
 
 @app.route('/register/', methods=['GET', 'POST'])
