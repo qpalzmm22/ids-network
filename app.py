@@ -1,8 +1,8 @@
 """Flask Login Example and instagram fallowing find"""
 
 from flask import Flask, url_for, render_template, request, redirect, session
-#from flask_sqlalchemy import SQLAlchemy
-f#rom instagram import getfollowedby, getname
+from flask_sqlalchemy import SQLAlchemy
+from instagram import getfollowedby, getname
 import sqlite3
 
 conn = sqlite3.connect("login.db")
@@ -11,15 +11,15 @@ cur = conn.cursor()
 conn.execute('CREATE TABLE IF NOT EXISTS users(id TEXT, password TEXT)')
 
 app = Flask(__name__)
-#app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
-#db = SQLAlchemy(app)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
+db = SQLAlchemy(app)
 
 
 class User(db.Model):
     """ Create user table"""
     id = db.Column(db.Integer, primary_key=True)
-    #username = db.Column(db.String(80), unique=True)
-    #password = db.Column(db.String(80))
+    username = db.Column(db.String(80), unique=True)
+    password = db.Column(db.String(80))
 
     def __init__(self, username, password):
         self.username = username
